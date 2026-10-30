@@ -1,0 +1,6 @@
+# Private deal materials and local evaluation outputs must stay outside this repository.
+private/
+runs/
+*.pdf
+__pycache__/
+.DS_Store
