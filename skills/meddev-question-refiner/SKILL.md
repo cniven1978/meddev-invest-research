@@ -2,7 +2,7 @@
 name: meddev-question-refiner
 description: 精炼医疗器械研究任务范围。当研究对象、资料或决策问题尚不清楚时，从已有输入提取信息并仅追问关键缺口。
 metadata:
-  version: "0.2.0"
+  version: "0.2.1"
 ---
 
 # 医疗器械研究范围精炼
