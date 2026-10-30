@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#fff"/>
+  <rect width="1200" height="100" fill="#173f50"/>
+  <g font-family="Arial, sans-serif" fill="#162d3b">
+    <text x="45" y="60" font-size="29" fill="white">Synthetic BP: tissue repair market and commercialization</text>
+    <text x="45" y="140" font-size="22">Material date: November 2022 | China | Fictional company</text>
+    <text x="50" y="205" font-size="25">Figure A: China terminal market value</text>
+    <text x="50" y="240" font-size="19">Unit: CNY 100 million</text>
+    <rect x="110" y="300" width="150" height="240" fill="#238b8d"/>
+    <rect x="360" y="380" width="150" height="160" fill="#89b7c4"/>
+    <text x="175" y="285" font-size="30">18</text>
+    <text x="422" y="365" font-size="30">12</text>
+    <line x1="65" y1="541" x2="550" y2="541" stroke="#253b45" stroke-width="2"/>
+    <text x="120" y="575" font-size="23">2021A</text>
+    <text x="370" y="575" font-size="23">2024E</text>
+    <text x="650" y="205" font-size="25">Figure B: tender unit price</text>
+    <text x="760" y="360" font-size="84" fill="#bd493e">-65%</text>
+    <text x="645" y="420" font-size="20">Average winning price change</text>
+    <text x="645" y="450" font-size="20">Selected regions and specifications</text>
+    <text x="45" y="625" font-size="22">Company claim: "The overall market fell 65%."</text>
+    <text x="45" y="665" font-size="22">Company disclosure: selected hospitals 90; procurement and cash not provided.</text>
+    <text x="45" y="720" font-size="18">Footnote: A is terminal spending; 2024E is the company's historical forecast.</text>
+    <text x="45" y="752" font-size="18">B is tender unit pricing for selected regions/specs; no matched volume data supplied.</text>
+  </g>
+</svg>
