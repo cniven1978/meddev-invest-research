@@ -1,0 +1,3 @@
+claim_id,subject_scope_time,statement,claim_status,evidence_ids,support_status,calculation_assumptions,decision_impact,next_verification
+C-01,市场/2023年/中国,年ERCP手术量约45万例,公司声称,E-01,部分支持,,决定市场天花板,查第三方口径
+C-02,里程碑/2024年/公司,优先进入100家医院,公司声称,E-01,支持,,决定放量节奏,查医院清单

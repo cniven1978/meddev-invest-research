@@ -3,4 +3,10 @@ private/
 runs/
 *.pdf
 __pycache__/
+*.pyc
 .DS_Store
+
+# 脚本运行时产物：每次跑都会变，不是源码
+outputs/
+tmp/
+qa-report.json

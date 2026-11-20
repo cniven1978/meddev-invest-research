@@ -1,0 +1,5 @@
+﻿claim_id,subject_scope_time,statement,claim_status,evidence_ids,support_status,calculation_assumptions,decision_impact,next_verification
+C-01,公司/2022年11月/整体,NMPA获批4款产品,已核实事实,E-01,无法核验,,决定管线可信度,查NMPA
+C-02,市场/2025年/中国,市场规模120亿元,测算或推断,E-02,支持,,决定天花板,
+C-03,财务/2024年/公司,营收8000万元,已核实事实,,支持,,决定估值,待补审计报表
+C-04,团队/2022年/核心团队,团队来自知名院校,公司声称,E-99,支持,,决定执行能力,访谈
