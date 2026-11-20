@@ -1,0 +1,2 @@
+claim_id,subject_scope_time,statement,claim_status,evidence_ids,support_status,calculation_assumptions,decision_impact,next_verification
+C-01,公司/2024年/主体,公司自述成立时间与员工人数,公司声称,E-01/E-02,支持,,决定主体真实性,工商登记核对

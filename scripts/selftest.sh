@@ -38,6 +38,9 @@ expect "工具权限不足被写成无风险应被阻断" 1 evals/qa-gate/case-t
 expect "页码误报不得阻断（ERCP 45万例 / P0 / （P0））" 0 evals/qa-gate/case-pageedge
 expect "页码区间越界应被阻断（第41–42页 / pp.45-48）" 1 evals/qa-gate/case-pageout
 expect "页码词块三类误报不得告警（数字型/否定型/空格差异）" 0 evals/qa-gate/case-pageterm --check-page-content
+expect "矛盾推进意见应被阻断（单一结论规则）" 1 evals/qa-gate/case-actionconflict
+expect "否定断言标为已核实事实应被阻断（不依赖 limitations 自述）" 1 evals/qa-gate/case-absence
+expect "斜杠分隔的证据ID不得误报" 0 evals/qa-gate/case-idslash
 
 echo
 echo "通过 ${pass}，失败 ${fail}，跳过 ${skip}"

@@ -2,7 +2,7 @@
 name: meddev-research-executor
 description: 执行医疗器械监管、临床、准入商业化、竞争、财务和治理研究。按当前资料与研究问题加载有关维度，不默认启动并行Agent。
 metadata:
-  version: "0.3.3"
+  version: "0.3.4"
 ---
 
 # 医疗器械研究执行兼容入口

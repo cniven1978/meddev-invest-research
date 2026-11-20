@@ -2,7 +2,7 @@
 name: meddev-synthesizer
 description: 将医疗器械研究结果合成为可追溯的初筛意见或研究备忘录，去重同源信息、保留冲突与关键资料缺口。
 metadata:
-  version: "0.3.3"
+  version: "0.3.4"
 ---
 
 # 医疗器械研究综合兼容入口

@@ -123,7 +123,20 @@ def check_claims(gate: Gate, claims: list[dict], evidence: dict[str, dict]) -> N
             gate.add("error", "STATUS_CONFLICT",
                      f"标为已核实事实却同时标为「{support}」，二者不可并存", where)
 
-        ids = [x.strip() for x in re.split(r"[;,，、\s]+", row.get("evidence_ids") or "") if x.strip()]
+        # 否定型断言不能靠「已核实事实」成立：查无记录只能记未核验。
+        # 这条判断必须独立于 evidence-ledger 的 limitations 自述——否则研究者
+        # 只要不写「权限不足」，check_tool_gap_misuse 就降级为 warn，整道闸失守。
+        for pattern, label in FALSE_NEGATIVE:
+            if status == "已核实事实" and re.search(pattern, row.get("statement") or ""):
+                gate.add("error", "ABSENCE_AS_VERIFIED",
+                         f"「{label}」不能标为已核实事实：查无记录不等于无此事，"
+                         f"只能记未披露或待核验，且不得依赖 limitations 自报工具缺口", where)
+                break
+
+        # 分隔符含斜杠与竖线：E-01/E-02、E-01|E-02 都是常见写法，
+        # 漏掉会把合法引用判成「引用了不存在的证据」，逼研究者改格式迁就门禁。
+        ids = [x.strip() for x in re.split(r"[;,，、\s/|｜+＋]+", row.get("evidence_ids") or "")
+               if x.strip()]
         for eid in ids:
             if eid.upper() in {"NA", "N/A", "无", "-", "待核验"}:
                 continue
@@ -229,6 +242,31 @@ def extract_page_refs(text: str) -> set[int]:
     return refs
 
 
+def find_verdicts(text: str) -> list[str]:
+    """找出报告里「下结论」的位置各自取了什么推进意见。
+
+    全全文扫 ACTIONS 会把正文叙述误当结论，例如「本轮 pass 到下一阶段前需补齐材料」
+    是过程描述，不是第二个结论。因此只认两类位置：
+      1. 含「推进/结论/意见/建议/动作/评级」等判定语的行；
+      2. 标题行（# 开头）里点明结论的。
+    同一位置出现多个互斥词时，按出现顺序取第一个（模板首选项在前）。
+    """
+    verdicts: list[str] = []
+    keys = ("推进", "结论", "意见", "建议", "动作", "评级", "判断", "定级")
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if not (stripped.startswith("#") or any(k in stripped for k in keys)):
+            continue
+        for action in ACTIONS:
+            if action in stripped:
+                if action not in verdicts:
+                    verdicts.append(action)
+                break
+    return verdicts
+
+
 def check_report(gate: Gate, text: str, page_count: int | None) -> None:
     if not text.strip():
         gate.add("error", "REPORT_EMPTY", "报告为空")
@@ -238,6 +276,15 @@ def check_report(gate: Gate, text: str, page_count: int | None) -> None:
     if not found_action:
         gate.add("error", "NO_ACTION",
                  f"报告没有给出推进意见，应取其一：{'/'.join(sorted(ACTIONS))}")
+    else:
+        # 推进意见必须唯一。矛盾结论比缺结论更危险：读者会各取所需。
+        # 判定看「结论位」而非全文：只扫首屏推进动作行与各级标题里点明结论的地方，
+        # 避免正文正常叙述（如「本轮 pass 到下一阶段前需补齐材料」）被误判为第二个结论。
+        verdicts = find_verdicts(text)
+        if len(verdicts) > 1:
+            gate.add("error", "ACTION_CONFLICT",
+                     f"报告在不同位置给出互斥结论（{'/'.join(verdicts)}），"
+                     f"同一份报告只能有一个推进意见")
 
     for pattern, label in FORBIDDEN:
         for match in re.finditer(pattern, text):
