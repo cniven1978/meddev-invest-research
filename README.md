@@ -2,7 +2,7 @@
 
 **医疗器械 BP 审查工作流**：把一份商业计划书变成可追溯的初筛意见——每条判断都能追到 BP 页码或原始来源，每个未核验项都写明找谁拿。
 
-当前版本 0.3.5（2026-11-20）· [MIT 许可](LICENSE) · 适配任意 skills-compatible runtime
+当前版本 0.3.6（2026-11-20）· [MIT 许可](LICENSE) · 适配任意 skills-compatible runtime
 
 ## 它解决什么问题
 

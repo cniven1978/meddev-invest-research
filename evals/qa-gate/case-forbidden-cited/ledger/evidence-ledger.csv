@@ -1,0 +1,3 @@
+evidence_id,source_type,publisher,title,locator,published_or_effective_at,accessed_at,version_region,information_origin,support_scope,limitations,origin_group
+E-01,公司或申办者披露,和瑞生物,BP第3页,BP P3,2022-11,2026-11-20,CN,公司自述,仅证披露内容,未独立核验,BP-2022
+E-02,二手研究,某咨询,行业报告,https://example.com/r1,2025-06,2026-11-20,CN,第三方测算,市场规模量级,口径未披露,REPORT-A

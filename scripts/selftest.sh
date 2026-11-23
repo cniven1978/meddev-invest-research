@@ -41,6 +41,8 @@ expect "页码词块三类误报不得告警（数字型/否定型/空格差异�
 expect "矛盾推进意见应被阻断（单一结论规则）" 1 evals/qa-gate/case-actionconflict
 expect "否定断言标为已核实事实应被阻断（不依赖 limitations 自述）" 1 evals/qa-gate/case-absence
 expect "斜杠分隔的证据ID不得误报" 0 evals/qa-gate/case-idslash
+expect "引用与否定语境的禁用词不得阻断（公司称/未完成）" 0 evals/qa-gate/case-forbidden-cited
+expect "报告自己下禁用断言应被阻断（据我们判断不构成豁免）" 1 evals/qa-gate/case-forbidden-assert
 
 echo
 echo "通过 ${pass}，失败 ${fail}，跳过 ${skip}"

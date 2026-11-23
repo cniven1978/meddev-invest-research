@@ -31,7 +31,9 @@ EVIDENCE_FIELDS = ["evidence_id", "source_type", "publisher", "title", "locator"
                    "published_or_effective_at", "accessed_at", "version_region",
                    "information_origin", "support_scope", "limitations", "origin_group"]
 
-# 结论级禁用表述：出现即阻断。BP 原文的公司宣称在台账里，不进报告正文。
+# 结论级禁用表述：报告自己下这种断言即阻断。
+# 但报告的一项核心工作就是如实记录「公司声称了什么」，因此引用与否定语境不算违规——
+# 判定交给 forbidden_context()，不是见词即杀。
 FORBIDDEN = [
     (r"投资总?分[：:为]?\s*\d", "出现投资总分"),
     (r"评分[：:为]?\s*\d+", "出现评分"),
@@ -40,6 +42,15 @@ FORBIDDEN = [
     (r"已(全部|完整)?核实完毕", "声称全部核实完毕"),
     (r"行业第一|市场第一|绝对领先", "未经证据的排名断言"),
 ]
+
+# 引用标记：上下文出现这些词，说明禁用表述归他人，报告只是在转述。
+# 不用裸「据」与裸「材料」——「据我们判断」「本材料不足以支持」是报告自己的话，
+# 把它们当引用会开出一条绕过通道（报告写「据我们判断，已完成尽调」即可过关）。
+CITATION_MARKERS = re.compile(
+    r"称|表示|声称|自评|披露|显示|写明|记载|标为"
+    r"|据称|据悉|据报道|据BP|据招股书|据公告|招股书|公告|访谈|新闻稿")
+# 否定标记：上下文出现这些词，说明报告是在否定该表述
+NEGATION_MARKERS = re.compile(r"未|不|无|非|不得|不能|禁止|避免|尚无|尚未|没有")
 
 # 关键未知项：模板要求保留，不因章节省略而消失
 KEY_UNKNOWNS = {
@@ -267,6 +278,16 @@ def find_verdicts(text: str) -> list[str]:
     return verdicts
 
 
+def forbidden_context(text: str, start: int) -> str:
+    """取禁用表述所在分句的前缀，用于判断这句话是谁说的。
+
+    只看前缀不看全文，因为要回答的是「这句话的主语」：分句起点到匹配处之间的文字
+    已经能区分「公司称…」与「我们认为…」。跨分句取上下文会把上一句的引用标记误带进来。
+    """
+    cut = max(text.rfind(c, 0, start) for c in "。；;！!？?\n") + 1
+    return text[cut:start]
+
+
 def check_report(gate: Gate, text: str, page_count: int | None) -> None:
     if not text.strip():
         gate.add("error", "REPORT_EMPTY", "报告为空")
@@ -289,7 +310,18 @@ def check_report(gate: Gate, text: str, page_count: int | None) -> None:
     for pattern, label in FORBIDDEN:
         for match in re.finditer(pattern, text):
             snippet = text[max(0, match.start() - 20): match.end() + 20].replace("\n", " ")
-            gate.add("error", "FORBIDDEN_PHRASE", f"{label}：「...{snippet}...」")
+            prefix = forbidden_context(text, match.start())
+            if NEGATION_MARKERS.search(prefix):
+                # 「本报告未完成尽调」被原实现判成「声称已完成尽调」，恰是反义。
+                # 否定语境不阻断，只提示复核措辞是否容易被误读。
+                gate.add("warn", "FORBIDDEN_NEGATED",
+                         f"{label}（否定语境，非断言，请确认表述清晰）：「...{snippet}...」")
+            elif CITATION_MARKERS.search(prefix):
+                # 「公司称行业第一，但无来源」是报告应尽的记录义务，不是报告自己的结论。
+                gate.add("warn", "FORBIDDEN_CITED",
+                         f"{label}（引用语境，请确认已标注来源与核验状态）：「...{snippet}...」")
+            else:
+                gate.add("error", "FORBIDDEN_PHRASE", f"{label}：「...{snippet}...」")
 
     gaps = [name for name, pattern in KEY_UNKNOWNS.items() if not re.search(pattern, text)]
     for name in gaps:
